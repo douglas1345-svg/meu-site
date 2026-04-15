@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BarberFlow Kit de Automação — Barbearia no automático em 7 dias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --off-black: #141414;
+    --dark: #1A1A1A;
+    --card: #1F1F1F;
+    --border: #2A2A2A;
+    --gold: #C8963E;
+    --gold-light: #E8B86D;
+    --gold-dim: rgba(200,150,62,0.12);
+    --white: #FFFFFF;
+    --muted: #888;
+    --text: #F5F0EB;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    height: -webkit-fill-available;
+  }
+  body { overflow-x: hidden; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  .display {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 0.92;
+  }
+
+  .heading {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+  }
+
+  /* ── LAYOUT ── */
+  section { position: relative; z-index: 1; -webkit-transform: translateZ(0); }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  .container-wide {
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: -webkit-sticky;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding-left: max(32px, env(safe-area-inset-left));
+    padding-right: max(32px, env(safe-area-inset-right));
+    z-index: 100;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+  }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 9px 20px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-link {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.10em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(200,150,62,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(200,150,62,0.04) 0%, transparent 60%);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    padding: 6px 14px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 148px;
+    line-height: 0.88;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .hero-title span { color: var(--gold); }
+
+  .hero-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--muted);
+    margin-bottom: 36px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-desc {
+    font-size: 18px;
+    color: var(--text);
+    max-width: 560px;
+    margin-bottom: 48px;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .hero-desc strong { color: var(--white); font-weight: 500; }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 18px 40px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.12);
+    transform: translateX(-100%);
+    transition: transform 0.3s;
+  }
+
+  .btn-primary:hover::after { transform: translateX(0); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,150,62,0.35); }
+
+  .hero-note {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  .hero-scroll span {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  @keyframes bounce {
+    0%, 100% { -webkit-transform: translateX(-50%) translateY(0); transform: translateX(-50%) translateY(0); }
+    50% { -webkit-transform: translateX(-50%) translateY(6px); transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── PAIN ── */
+  .pain {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .pain-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  .pain-statement {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 68px;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .pain-statement .strike {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .pain-items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    margin-top: 56px;
+    border: 1px solid var(--border);
+  }
+
+  .pain-item {
+    padding: 32px 28px;
+    background: var(--off-black);
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .pain-item:last-child { border-right: none; }
+  .pain-item:hover { background: var(--dark); }
+
+  .pain-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+    filter: none;
+    opacity: 1;
+  }
+
+  .pain-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .pain-desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ── SOLUTION ── */
+  .solution {
+    padding: 100px 0;
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .solution-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  @media (max-width: 700px) {
+    .solution-inner { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .solution-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .solution-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--white);
+    line-height: 0.92;
+    margin-bottom: 28px;
+  }
+
+  .solution-body { font-size: 16px; color: var(--text); font-weight: 300; line-height: 1.8; }
+  .solution-body strong { color: var(--white); font-weight: 500; }
+
+  /* Chat mockup */
+  .chat-mock {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    padding: 24px;
+    font-size: 14px;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chat-avatar {
+    width: 36px; height: 36px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+
+  .chat-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: var(--white); font-size: 13px; }
+  .chat-status { font-size: 11px; color: #4caf50; }
+
+  .msg { margin-bottom: 12px; display: flex; flex-direction: column; }
+
+  .msg.client { align-items: flex-end; }
+  .msg.bot { align-items: flex-start; }
+
+  .bubble {
+    padding: 10px 14px;
+    max-width: 80%;
+    line-height: 1.4;
+    font-size: 13px;
+  }
+
+  .msg.client .bubble {
+    background: var(--gold-dim);
+    border: 1px solid rgba(200,150,62,0.3);
+    color: var(--white);
+    border-radius: 12px 12px 2px 12px;
+  }
+
+  .msg.bot .bubble {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 12px 12px 12px 2px;
+  }
+
+  .msg-time { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  .typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px 12px 12px 2px;
+    width: fit-content;
+    margin-top: 4px;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    background: var(--muted);
+    border-radius: 50%;
+    animation: typing 1.2s ease-in-out infinite;
+  }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+
+  /* ── KIT ── */
+  .kit {
+    padding: 100px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-header {
+    margin-bottom: 56px;
+  }
+
+  .section-kicker {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    color: var(--white);
+    line-height: 0.92;
+  }
+
+  .deliverables {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+  }
+
+  .deliverable {
+    padding: 32px;
+    background: var(--off-black);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .deliverable::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .deliverable:hover { background: var(--dark); }
+  .deliverable:hover::before { background: var(--gold); }
+
+  .deliverable-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 16px;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+
+  .deliverable:hover .deliverable-num { opacity: 1; }
+
+  .deliverable-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .deliverable-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  .deliverable-tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+
+  .tag-bonus { background: rgba(200,150,62,0.15); color: var(--gold); border: 1px solid rgba(200,150,62,0.3); }
+  .tag-core  { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border); }
+
+  /* ── FLOW ── */
+  .flow {
+    padding: 100px 0;
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .days-grid {
+    -webkit-overflow-scrolling: touch;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    border: 1px solid var(--border);
+    margin-top: 0;
+  }
+
+  /* last row: 3 cards centered — span trick via nth-child */
+  .day-card:nth-child(5) { grid-column: 1; }
+  .day-card:nth-child(6) { grid-column: 2; }
+  .day-card:nth-child(7) { grid-column: 3 / span 2; }
+
+  .day-card {
+    padding: 36px 28px;
+    background: var(--dark);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .day-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .day-card:hover { background: var(--card); }
+  .day-card:hover::before { background: var(--gold); }
+
+  .day-card--highlight {
+    background: var(--card);
+    border: 1px solid rgba(200,150,62,0.25);
+  }
+
+  .day-card--highlight::before { background: var(--gold); }
+
+  .day-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.14em;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .day-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--white);
+    line-height: 1.2;
+  }
+
+  .day-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .day-check {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .day-check--gold { color: var(--gold); }
+
+  @media (max-width: 900px) {
+    .days-grid {
+    -webkit-overflow-scrolling: touch; grid-template-columns: repeat(2, 1fr); }
+    .day-card:nth-child(5),
+    .day-card:nth-child(6),
+    .day-card:nth-child(7) { grid-column: auto; }
+  }
+
+  @media (max-width: 500px) {
+    .days-grid {
+    -webkit-overflow-scrolling: touch; grid-template-columns: 1fr; }
+  }
+
+  /* ── UPSELL ── */
+  .upsell {
+    padding: 100px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .upsell-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    border: 1px solid var(--border);
+    margin-top: 56px;
+  }
+
+  @media (max-width: 600px) {
+    .upsell-grid { grid-template-columns: 1fr; }
+  }
+
+  .upsell-card {
+    padding: 40px;
+    background: var(--off-black);
+    border-right: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .upsell-card:last-child { border-right: none; }
+  .upsell-card:hover { background: var(--dark); }
+
+  .upsell-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .upsell-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--white);
+    line-height: 0.95;
+    margin-bottom: 16px;
+  }
+
+  .upsell-price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .upsell-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--off-black);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+  }
+
+  .testi-card {
+    padding: 32px;
+    background: var(--dark);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .testi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .testi-card:hover { background: var(--card); }
+  .testi-card:hover::before { background: var(--gold); }
+
+  .testi-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .testi-avatar {
+    width: 52px; height: 52px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .testi-avatar svg {
+    width: 28px; height: 28px;
+  }
+
+  .testi-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .testi-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--white);
+    margin-bottom: 2px;
+  }
+
+  .testi-place {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .testi-stars {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .testi-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    font-weight: 300;
+    font-style: italic;
+    flex: 1;
+  }
+
+  .testi-text::before { content: '\201C'; }
+  .testi-text::after  { content: '\201D'; }
+
+  .testi-result {
+    margin-top: auto;
+  }
+
+  .testi-tag {
+    display: inline-block;
+    background: rgba(200,150,62,0.12);
+    border: 1px solid rgba(200,150,62,0.3);
+    color: var(--gold);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 700px) {
+    .testimonials-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── PRICING ── */
+  .pricing {
+    padding: 120px 0;
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .price-card {
+    max-width: 520px;
+    margin: 56px auto 0;
+    border: 1px solid var(--gold);
+    padding: 56px 48px;
+    background: var(--dark);
+    position: relative;
+  }
+
+  .price-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 5px 18px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .price-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: 0.06em;
+    margin-bottom: 24px;
+  }
+
+  .price-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 96px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .price-amount sup {
+    font-size: 36px;
+    vertical-align: super;
+    color: var(--gold-light);
+  }
+
+  .price-once {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .price-includes {
+    text-align: left;
+    margin-bottom: 40px;
+    list-style: none;
+  }
+
+  .price-includes li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .price-includes li:last-child { border-bottom: none; }
+
+  .check {
+    width: 20px; height: 20px;
+    background: var(--gold-dim);
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .price-cta {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 20px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    margin-bottom: 16px;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .price-cta:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 48px rgba(200,150,62,0.4);
+  }
+
+  .price-guarantee {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── FAQ ── */
+  .faq {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-list { margin-top: 56px; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-q {
+    padding: 24px 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    user-select: none;
+  }
+
+  .faq-q:hover { color: var(--gold); }
+
+  .faq-toggle {
+    font-size: 22px;
+    color: var(--gold);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.3s;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding-bottom: 24px;
+  }
+
+  .faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+  /* ── CTA FINAL ── */
+  .cta-final {
+    padding: 120px 0;
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .cta-final-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 112px;
+    color: var(--white);
+    line-height: 0.9;
+    margin-bottom: 24px;
+  }
+
+  .cta-final-title span { color: var(--gold); }
+
+  .cta-final-sub {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  footer strong { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  .fade-up {
+    opacity: 0;
+    -webkit-transform: translateY(28px);
+    transform: translateY(28px);
+    -webkit-transition: opacity 0.7s ease, -webkit-transform 0.7s ease;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+
+  /* Impede overflow em qualquer elemento */
+  img, video, iframe, svg { max-width: 100%; }
+
+  /* ── TABLET (769px – 1024px) ── */
+  @media screen and (max-width: 1024px) {
+    .days-grid {
+    -webkit-overflow-scrolling: touch; grid-template-columns: repeat(2, 1fr); }
+    .day-card:nth-child(5),
+    .day-card:nth-child(6),
+    .day-card:nth-child(7) { grid-column: auto; }
+    .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ── TABLET PEQUENO / IPAD MINI (até 768px) ── */
+  @media screen and (max-width: 768px) {
+    .container      { padding: 0 24px; }
+    .container-wide { padding: 0 24px; }
+
+    /* Hero */
+    .hero-title     { font-size: 80px; }
+    .hero-sub       { font-size: 34px; }
+    .hero-desc      { font-size: 16px; max-width: 100%; }
+    .hero-actions   { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .btn-primary    { display: block; width: 100%; text-align: center; }
+
+    /* Títulos de seção */
+    .section-title  { font-size: 52px; }
+    .solution-title { font-size: 52px; }
+    .pain-statement { font-size: 42px; }
+    .cta-final-title { font-size: 72px; }
+
+    /* Dor */
+    .pain-items     { grid-template-columns: repeat(2, 1fr); }
+
+    /* Solução */
+    .solution-inner { grid-template-columns: 1fr; gap: 48px; }
+
+    /* Kit */
+    .deliverables   { grid-template-columns: 1fr; }
+
+    /* Dias */
+    .days-grid      { grid-template-columns: repeat(2, 1fr); }
+    .day-card:nth-child(5),
+    .day-card:nth-child(6),
+    .day-card:nth-child(7) { grid-column: auto; }
+
+    /* Depoimentos */
+    .testimonials-grid { grid-template-columns: 1fr; }
+
+    /* Upsell */
+    .upsell-grid    { grid-template-columns: 1fr; }
+
+    /* Preço */
+    .price-card     { padding: 48px 28px; }
+    .price-amount   { font-size: 80px; }
+  }
+
+  /* ── MOBILE IPHONE & ANDROID (até 480px) ── */
+  @media screen and (max-width: 480px) {
+
+    /* Nav */
+    nav             { padding: 14px 20px; }
+    .nav-logo       { font-size: 19px; }
+    .nav-cta        { font-size: 12px; padding: 9px 16px; letter-spacing: 0.02em; }
+
+    /* Hero */
+    .hero           { padding: 88px 0 64px; min-height: auto; -webkit-overflow-scrolling: touch; }
+    .hero-title     { font-size: 64px; line-height: 0.88; }
+    .hero-sub       { font-size: 26px; }
+    .hero-tag       { font-size: 10px; letter-spacing: 0.1em; padding: 6px 12px; margin-bottom: 24px; }
+    .hero-desc      { font-size: 16px; margin-bottom: 36px; }
+    .hero-actions   { flex-direction: column; align-items: stretch; gap: 16px; }
+    .btn-primary    { font-size: 15px; padding: 18px 24px; width: 100%; text-align: center; box-sizing: border-box; }
+    .hero-note      { font-size: 12px; text-align: center; }
+    .hero-scroll    { display: none; }
+
+    /* Seções — padding reduzido */
+    .pain, .solution, .kit, .flow, .testimonials, .upsell, .faq, .cta-final { padding: 72px 0; }
+    .pricing        { padding: 80px 0; }
+
+    /* Títulos responsivos */
+    .section-title  { font-size: 42px; }
+    .solution-title { font-size: 42px; }
+    .pain-statement { font-size: 36px; }
+    .cta-final-title { font-size: 56px; }
+    .section-header { margin-bottom: 40px; }
+    .section-kicker { font-size: 12px; }
+
+    /* Dor */
+    .pain-items     { grid-template-columns: 1fr; gap: 1px; }
+    .pain-item      { padding: 28px 24px; }
+
+    /* Solução */
+    .solution-inner { grid-template-columns: 1fr; gap: 40px; }
+    .chat-mock      { padding: 20px; font-size: 13px; }
+
+    /* Kit */
+    .deliverables   { grid-template-columns: 1fr; }
+    .deliverable    { padding: 28px 24px; }
+    .deliverable-num { font-size: 40px; }
+
+    /* Como funciona */
+    .days-grid      { grid-template-columns: 1fr; }
+    .day-card:nth-child(5),
+    .day-card:nth-child(6),
+    .day-card:nth-child(7) { grid-column: auto; }
+    .day-card       { padding: 28px 24px; }
+    .day-label      { font-size: 16px; }
+    .day-title      { font-size: 16px; }
+    .day-desc       { font-size: 13px; }
+
+    /* Depoimentos */
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .testi-card     { padding: 28px 24px; }
+    .testi-place    { font-size: 10px; white-space: normal; }
+
+    /* Preço */
+    .price-card     { padding: 40px 20px; }
+    .price-amount   { font-size: 80px; }
+    .price-name     { font-size: 26px; }
+    .price-once     { font-size: 11px; }
+    .price-includes li { font-size: 13px; }
+    .price-cta      { font-size: 14px; padding: 18px; }
+    .price-guarantee { font-size: 11px; }
+
+    /* Upsell */
+    .upsell-grid    { grid-template-columns: 1fr; }
+    .upsell-card    { padding: 32px 24px; }
+    .upsell-title   { font-size: 32px; }
+    .upsell-price   { font-size: 22px; }
+
+    /* FAQ */
+    .faq-q          { font-size: 14px; padding: 20px 0; }
+    .faq-a          { font-size: 13px; }
+
+    /* CTA Final */
+    .cta-final-sub  { font-size: 16px; }
+
+    /* Footer */
+    footer          { padding: 36px 20px; font-size: 11px; line-height: 1.8; }
+  }
+
+  /* ── IPHONE SE / ANDROID PEQUENO (até 375px) ── */
+  @media screen and (max-width: 375px) {
+    .hero-title     { font-size: 54px; }
+    .hero-sub       { font-size: 22px; }
+    .section-title  { font-size: 36px; }
+    .solution-title { font-size: 36px; }
+    .pain-statement { font-size: 30px; }
+    .cta-final-title { font-size: 46px; }
+    .price-amount   { font-size: 70px; }
+    .nav-logo       { font-size: 17px; }
+    .btn-primary    { font-size: 14px; padding: 16px 20px; }
+  }
+
+  /* ── IPHONE SE PRIMEIRA GERAÇÃO (até 320px) ── */
+  @media screen and (max-width: 320px) {
+    .hero-title     { font-size: 46px; }
+    .section-title  { font-size: 30px; }
+    .cta-final-title { font-size: 38px; }
+    .price-amount   { font-size: 60px; }
+    .nav-logo       { font-size: 15px; }
+    .nav-cta        { font-size: 11px; padding: 8px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">✂ <span style="color:var(--white)">BARBER</span><span style="color:var(--gold)">FLOW</span></span>
+  <div class="nav-links">
+    <a href="#comprar" class="nav-cta">Comprar agora</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container">
+    <div class="fade-up">
+      <span class="hero-tag">PRODUTO DIGITAL · VENDA ÚNICA</span>
+    </div>
+    <h1 class="hero-title fade-up" style="transition-delay:0.1s">
+      BARBER<span>FLOW</span>
+    </h1>
+    <p class="hero-sub fade-up" style="transition-delay:0.2s">Kit de Automação</p>
+    <p class="hero-desc fade-up" style="transition-delay:0.3s">
+      Sua barbearia agendando clientes no WhatsApp <strong>automaticamente</strong> — em até 7 dias, sem programar, <strong>sem mensalidade</strong>.
+    </p>
+    <div class="hero-actions fade-up" style="transition-delay:0.4s">
+      <a href="#comprar" class="btn-primary">Quero o kit por R$ 197</a>
+      <span class="hero-note">Pagamento único. Acesso imediato.</span>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <svg width="16" height="24" viewBox="0 0 16 24" fill="none"><rect x="5.5" y="1" width="5" height="9" rx="2.5" stroke="currentColor" stroke-width="1.2"/><line x1="8" y1="14" x2="8" y2="22" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><polyline points="5,19 8,22 11,19" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  </div>
+</section>
+
+<!-- DOR -->
+<section class="pain">
+  <div class="container">
+    <p class="pain-label">O problema</p>
+    <h2 class="pain-statement display">
+      VOCÊ ESTÁ PERDENDO<br><span style="color:var(--gold)">CLIENTES</span><span class="strike"> TODA HORA</span>
+    </h2>
+    <p style="font-size:17px;color:var(--muted);margin-top:12px;font-weight:300;">
+      E o pior: nem percebe.
+    </p>
+    <div class="pain-items fade-up">
+      <div class="pain-item">
+        <span class="pain-icon">📱</span>
+        <p class="pain-title">WhatsApp lotado</p>
+        <p class="pain-desc">Cliente manda mensagem à meia-noite. Você não responde. Ele vai para a concorrência.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">📅</span>
+        <p class="pain-title">Agenda bagunçada</p>
+        <p class="pain-desc">Caderno, papel, memória. Um conflito de horário e o cliente fica esperando na cadeira.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">🕳</span>
+        <p class="pain-title">Horário vago</p>
+        <p class="pain-desc">Cliente cancelou e não avisou. Hora perdida, dinheiro que não volta.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">🔁</span>
+        <p class="pain-title">Mesmo trabalho todo dia</p>
+        <p class="pain-desc">Responder "quanto é o corte?", "tem horário amanhã?", "pode às 18h?" — para sempre.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">😤</span>
+        <p class="pain-title">Cliente que some</p>
+        <p class="pain-desc">Você confirmou o horário, separou o tempo, ficou esperando. O cliente não apareceu e nem avisou.</p>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">📉</span>
+        <p class="pain-title">Sem controle do negócio</p>
+        <p class="pain-desc">Não sabe quantos clientes passou essa semana, qual serviço mais vende nem qual horário fica mais vago.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section class="solution">
+  <div class="container-wide">
+    <div class="solution-inner">
+      <div class="fade-up">
+        <p class="solution-kicker">A solução</p>
+        <h2 class="solution-title display">UM <span style="color:var(--gold)">FUNCIONÁRIO<br>DIGITAL</span> QUE<br>NUNCA PARA</h2>
+        <p class="solution-body">
+          O BarberFlow coloca um bot com IA no WhatsApp da sua barbearia. Ele <strong>atende, agenda, confirma e organiza</strong> tudo automaticamente — enquanto você foca no corte.<br><br>
+          Cada agendamento vai direto pro seu <strong>Google Calendar</strong>. Sem app novo. Sem sistema complicado.
+        </p>
+      </div>
+      <div class="fade-up" style="transition-delay:0.2s">
+        <div class="chat-mock">
+          <div class="chat-header">
+            <div class="chat-avatar">✂</div>
+            <div>
+              <div class="chat-name">BarberFlow</div>
+              <div class="chat-status">● online agora</div>
+            </div>
+          </div>
+          <div class="msg client">
+            <div class="bubble">Oi, tem horário hoje à noite?</div>
+            <div class="msg-time">23:14</div>
+          </div>
+          <div class="msg bot">
+            <div class="bubble">Oi! Temos horários às 18h, 19h e 20h. Qual serviço você quer? Corte, barba ou os dois? ✂</div>
+            <div class="msg-time">23:14</div>
+          </div>
+          <div class="msg client">
+            <div class="bubble">Corte + barba às 20h</div>
+            <div class="msg-time">23:15</div>
+          </div>
+          <div class="msg bot">
+            <div class="bubble">Perfeito! Qual seu nome?</div>
+            <div class="msg-time">23:15</div>
+          </div>
+          <div class="msg client">
+            <div class="bubble">Lucas</div>
+            <div class="msg-time">23:15</div>
+          </div>
+          <div class="msg bot">
+            <div class="bubble">✅ Agendado, Lucas! Corte + barba, amanhã às 20h. Te vejo lá!</div>
+            <div class="msg-time">23:15</div>
+          </div>
+          <div class="typing">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KIT -->
+<section class="kit" id="kit">
+  <div class="container">
+    <div class="section-header fade-up">
+      <p class="section-kicker">O que está incluso</p>
+      <h2 class="section-title display">TUDO QUE VOCÊ<br><span style="color:var(--gold)">PRECISA</span> NO KIT</h2>
+    </div>
+    <div class="deliverables fade-up">
+      <div class="deliverable">
+        <div class="deliverable-num">01</div>
+        <div class="deliverable-title">Fluxo n8n pronto</div>
+        <p class="deliverable-desc">Arquivo JSON para importar direto no n8n. Versão básica e versão avançada, comentadas passo a passo.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">02</div>
+        <div class="deliverable-title">4 Prompts de IA otimizados</div>
+        <p class="deliverable-desc">Atendente principal, fallback, fechamento e recuperação de cliente indeciso. Prontos para usar na OpenAI API.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">03</div>
+        <div class="deliverable-title">Guia de integração WhatsApp</div>
+        <p class="deliverable-desc">Passo a passo para conectar o número da barbearia via Evolution API. Com prints e webhook configurado.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">04</div>
+        <div class="deliverable-title">Guia Google Calendar</div>
+        <p class="deliverable-desc">Como criar a agenda, gerar as credenciais e conectar ao n8n para criar eventos automaticamente.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">05</div>
+        <div class="deliverable-title">Guia Supabase + banco de dados</div>
+        <p class="deliverable-desc">Cria o projeto, a tabela appointments e conecta tudo ao n8n. SQL pronto para copiar e colar.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">06</div>
+        <div class="deliverable-title">Guia de deploy (Railway/VPS)</div>
+        <p class="deliverable-desc">Como subir o n8n, configurar as variáveis e ativar o workflow. Do zero até funcionando.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">07</div>
+        <div class="deliverable-title">Guia de testes</div>
+        <p class="deliverable-desc">Como simular um cliente, validar o agendamento no Calendar e corrigir os erros mais comuns.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">08</div>
+        <div class="deliverable-title">Scripts prontos para o WhatsApp</div>
+        <p class="deliverable-desc">Saudação automática, resposta de preço e mensagem fora do horário. Copia, cola e usa.</p>
+        <span class="deliverable-tag tag-core">Core</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">09</div>
+        <div class="deliverable-title">Script de vendas para o barbeiro</div>
+        <p class="deliverable-desc">Mensagem pronta para converter clientes que perguntam sobre agendamento em clientes marcados.</p>
+        <span class="deliverable-tag tag-bonus">Bônus</span>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">10</div>
+        <div class="deliverable-title">3 vídeos de instalação (Loom)</div>
+        <p class="deliverable-desc">Instalar tudo, testar o sistema e usar no dia a dia. Gravados em tela, direto ao ponto.</p>
+        <span class="deliverable-tag tag-bonus">Bônus</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLUXO -->
+<section class="flow">
+  <div class="container">
+    <div class="section-header fade-up">
+      <p class="section-kicker">Como funciona</p>
+      <h2 class="section-title display">DO ZERO AO<br><span style="color:var(--gold)">AUTOMÁTICO</span> EM 7 DIAS</h2>
+    </div>
+    <div class="days-grid fade-up">
+
+      <div class="day-card">
+        <div class="day-label">DIA 1</div>
+        <div class="day-title">Compra & Acesso</div>
+        <p class="day-desc">Você recebe o kit completo imediatamente após o pagamento. Abre os guias, assiste ao vídeo de visão geral e entende o que vai montar.</p>
+        <div class="day-check">✓ Kit em mãos</div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-label">DIA 2</div>
+        <div class="day-title">Deploy do n8n</div>
+        <p class="day-desc">Sobe o n8n no Railway ou VPS seguindo o guia. Configura as variáveis de ambiente e importa o fluxo JSON com um clique.</p>
+        <div class="day-check">✓ n8n rodando</div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-label">DIA 3</div>
+        <div class="day-title">WhatsApp Conectado</div>
+        <p class="day-desc">Conecta o número da barbearia via Evolution API ou WhatsApp Cloud API. Configura o webhook e o bot já começa a receber mensagens.</p>
+        <div class="day-check">✓ Bot no ar</div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-label">DIA 4</div>
+        <div class="day-title">IA Configurada</div>
+        <p class="day-desc">Cola os 4 prompts otimizados na OpenAI API. Personaliza o nome, serviços e horários da sua barbearia. A IA passa a atender como assistente real.</p>
+        <div class="day-check">✓ IA respondendo</div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-label">DIA 5</div>
+        <div class="day-title">Agenda + Banco</div>
+        <p class="day-desc">Conecta o Google Calendar e o Supabase. Agora todo agendamento cria um evento automático na sua agenda e registra no banco de dados.</p>
+        <div class="day-check">✓ Calendar integrado</div>
+      </div>
+
+      <div class="day-card">
+        <div class="day-label">DIA 6</div>
+        <div class="day-title">Testes & Ajustes</div>
+        <p class="day-desc">Simula conversas reais como cliente, valida o fluxo completo e corrige os erros mais comuns com o guia de troubleshooting incluso no kit.</p>
+        <div class="day-check">✓ Fluxo validado</div>
+      </div>
+
+      <div class="day-card day-card--highlight">
+        <div class="day-label">DIA 7</div>
+        <div class="day-title">Barbearia no Automático</div>
+        <p class="day-desc">Sistema 100% operacional. Bot atendendo 24h, agenda cheia no Calendar, zero mensagem manual. Você foca no corte — a tecnologia cuida do resto.</p>
+        <div class="day-check day-check--gold">✓ 24h no automático</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="testimonials">
+  <div class="container">
+    <div class="section-header fade-up">
+      <p class="section-kicker">Quem já usa</p>
+      <h2 class="section-title display"><span style="color:var(--gold)">BARBEARIAS</span> QUE<br>SAÍRAM DO MANUAL</h2>
+    </div>
+    <div class="testimonials-grid fade-up">
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="6" cy="6" r="3" stroke="#C8963E" stroke-width="1.5"/>
+  <circle cx="6" cy="18" r="3" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="8.5" y1="8.5" x2="20" y2="20" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="8.5" y1="15.5" x2="20" y2="4" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">Rodrigo Costa</p>
+            <p class="testi-place">Barbearia Costão — São Paulo, SP</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"Instalei em uma tarde seguindo o guia. No mesmo dia à noite o bot já estava agendando clientes sozinho. Perdi a conta de quantas mensagens deixei de responder no zap."</p>
+        <div class="testi-result">
+          <span class="testi-tag">+63% agendamentos</span>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="10" width="18" height="4" rx="1" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="7" y1="10" x2="7" y2="14" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="17" y1="10" x2="20" y2="7" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="17" y1="14" x2="20" y2="17" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">Marcos Silva</p>
+            <p class="testi-place">Studio MS Barber — Belo Horizonte, MG</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"Antes eu perdia horário toda semana porque o cliente sumia. Agora o bot confirma, lembra e até reorganiza a agenda. Nunca mais fiquei esperando ninguém."</p>
+        <div class="testi-result">
+          <span class="testi-tag">Zero no-shows</span>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="3" y="9" width="18" height="6" rx="1" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="7"  y1="15" x2="7"  y2="19" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="10" y1="15" x2="10" y2="19" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="13" y1="15" x2="13" y2="19" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="16" y1="15" x2="16" y2="19" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">Felipe Oliveira</p>
+            <p class="testi-place">Navalha & Co. — Rio de Janeiro, RJ</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"Achei que ia precisar de um programador. Segui os guias passo a passo e em 2 horas estava funcionando. O suporte do FAQ resolveu a única dúvida que tive."</p>
+        <div class="testi-result">
+          <span class="testi-tag">Instalado em 2h</span>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="9" y="2" width="6" height="20" rx="3" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="9" y1="8"  x2="15" y2="8"  stroke="#C8963E" stroke-width="1" stroke-dasharray="1.5 1.5"/>
+  <line x1="9" y1="12" x2="15" y2="12" stroke="#C8963E" stroke-width="1" stroke-dasharray="1.5 1.5"/>
+  <line x1="9" y1="16" x2="15" y2="16" stroke="#C8963E" stroke-width="1" stroke-dasharray="1.5 1.5"/>
+  <line x1="6" y1="2"  x2="18" y2="2"  stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="6" y1="22" x2="18" y2="22" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">Thiago Nunes</p>
+            <p class="testi-place">BarberKing — Curitiba, PR</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"R$ 197 que se pagaram no primeiro fim de semana. Fiquei no churrasco com a família enquanto o bot fechou 11 horários. Isso não tem preço."</p>
+        <div class="testi-result">
+          <span class="testi-tag">ROI no 1º fim de semana</span>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="5" y="4" width="10" height="14" rx="3" stroke="#C8963E" stroke-width="1.5"/>
+  <line x1="7" y1="18" x2="13" y2="18" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="7" y1="20" x2="13" y2="20" stroke="#C8963E" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="8" y1="8"  x2="12" y2="8"  stroke="#C8963E" stroke-width="1"   stroke-linecap="round"/>
+  <line x1="8" y1="11" x2="12" y2="11" stroke="#C8963E" stroke-width="1"   stroke-linecap="round"/>
+  <circle cx="17" cy="8" r="2" stroke="#C8963E" stroke-width="1.5"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">André Lima</p>
+            <p class="testi-place">Barbearia Clássica — Fortaleza, CE</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"Minha barbearia é pequena, só eu e mais um barbeiro. Pensava que automação era coisa de empresa grande. Esse kit mudou minha cabeça — e minha agenda."</p>
+        <div class="testi-result">
+          <span class="testi-tag">Agenda cheia toda semana</span>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M3 12 C3 9 6 8 8 10 C9 11 10 11 12 11 C14 11 15 11 16 10 C18 8 21 9 21 12 C21 14 19 15 17 14 C16 13.5 14 13 12 13 C10 13 8 13.5 7 14 C5 15 3 14 3 12Z" stroke="#C8963E" stroke-width="1.5" stroke-linejoin="round"/>
+</svg></div>
+          <div class="testi-meta">
+            <p class="testi-name">Gabriel Rocha</p>
+            <p class="testi-place">Corte & Estilo — Porto Alegre, RS</p>
+          </div>
+          <div class="testi-stars">★★★★★</div>
+        </div>
+        <p class="testi-text">"O cliente manda mensagem às 23h, o bot responde, agenda e confirma. De manhã eu acordo com o Google Calendar cheio. Parece mágica mas é só automação."</p>
+        <div class="testi-result">
+          <span class="testi-tag">Atende 24h por dia</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="pricing" id="comprar">
+  <div class="container">
+    <div class="section-header fade-up">
+      <p class="section-kicker">Preço</p>
+      <h2 class="section-title display">UMA VEZ.<br><span style="color:var(--gold)">PARA SEMPRE.</span></h2>
+    </div>
+    <div class="price-card fade-up">
+      <div class="price-badge">Mais vendido</div>
+      <div class="price-name">BarberFlow Kit de Automação</div>
+      <div class="price-amount"><sup>R$</sup>197</div>
+      <div class="price-once">Pagamento único — sem mensalidade</div>
+      <ul class="price-includes">
+        <li><span class="check">✓</span> Fluxo n8n completo (básico + avançado)</li>
+        <li><span class="check">✓</span> 4 prompts de IA prontos para OpenAI</li>
+        <li><span class="check">✓</span> Guia de integração WhatsApp</li>
+        <li><span class="check">✓</span> Guia Google Calendar + Supabase</li>
+        <li><span class="check">✓</span> Guia de deploy Railway/VPS</li>
+        <li><span class="check">✓</span> Scripts prontos para o WhatsApp</li>
+        <li><span class="check">✓</span> Guia de testes e erros comuns</li>
+        <li><span class="check">✓</span> 3 vídeos de instalação no Loom</li>
+        <li><span class="check">✓</span> Script de vendas para o barbeiro</li>
+        <li><span class="check">✓</span> Acesso imediato após pagamento</li>
+      </ul>
+      <a href="#" class="price-cta">Comprar agora por R$ 197</a>
+      <p class="price-guarantee">Necessário conhecimento básico de tecnologia · Integração feita pelo cliente seguindo os guias · Suporte via FAQ incluso</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="section-header fade-up">
+      <p class="section-kicker">Dúvidas</p>
+      <h2 class="section-title display">PERGUNTAS<br>FREQUENTES</h2>
+    </div>
+    <div class="faq-list fade-up">
+      <div class="faq-item">
+        <div class="faq-q">Preciso saber programar para instalar?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Não precisa programar. Mas é necessário conhecimento básico de tecnologia — saber seguir um guia, criar conta em plataformas, copiar e colar configurações. Os guias e vídeos foram feitos para facilitar ao máximo esse processo.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Qual é o custo mensal para manter o sistema funcionando?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">O BarberFlow em si não tem mensalidade. Mas as ferramentas que ele usa podem ter custos: n8n no Railway (~US$ 5/mês), OpenAI API (pago por uso, muito baixo para barbearias) e WhatsApp Business API (varia por volume de mensagens). O Supabase e o Google Calendar são gratuitos.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Quanto tempo leva para instalar tudo?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Em média 2 a 3 horas seguindo os guias. Quem já tem experiência com ferramentas como n8n pode terminar em 1 hora. Os vídeos de instalação foram gravados passo a passo para acelerar esse processo.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Funciona com qualquer número de WhatsApp?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">O kit inclui guia para duas opções: Evolution API (mais fácil, funciona com número comum) e WhatsApp Cloud API (oficial, recomendado para volume maior). O guia explica as diferenças e como configurar cada uma.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">E se eu travar na instalação?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">O kit inclui um guia de erros comuns com as soluções mais frequentes. Se precisar de ajuda além do FAQ, você pode contratar o serviço de setup feito por nós a partir de R$ 300.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Precisa de barbeiro específico ou funciona para qualquer tipo?<span class="faq-toggle">+</span></div>
+        <div class="faq-a">Funciona para barbearias de bairro, premium e barbeiros autônomos. O catálogo de serviços e os horários são configuráveis — você adapta para a realidade da sua barbearia.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <div class="container">
+    <h2 class="cta-final-title display fade-up">
+      PARE DE<br>PERDER <span>CLIENTE</span><br>POR DEMORA
+    </h2>
+    <p class="cta-final-sub fade-up" style="transition-delay:0.1s">
+      R$ 197 uma vez. Funciona para sempre.
+    </p>
+    <a href="#comprar" class="btn-primary fade-up" style="transition-delay:0.2s">
+      Quero o BarberFlow Kit de Automação
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>✂ BarberFlow Kit de Automação</strong> — Produto digital. Entrega imediata após pagamento.</p>
+  <p style="margin-top:8px">Necessário conhecimento básico de tecnologia · Integração feita pelo cliente · Suporte via FAQ</p>
+</footer>
+
+<script>
+  // Intersection observer para fade-up
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => {
+      const item = q.parentElement;
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+
+  // Trigger visible for above-fold
+  setTimeout(() => {
+    document.querySelectorAll('.fade-up').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight) el.classList.add('visible');
+    });
+  }, 100);
+</script>
+</body>
+</html>
